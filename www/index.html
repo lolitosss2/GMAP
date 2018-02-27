@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<head>
+<meta charset="UTF-8">
+
+<title>Geo Location</title>
+
+<style type="text/css">
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0 }
+#map-canvas { height: 50% }
+</style>
+
+<script src="http://maps.google.com/maps/api/js" type="text/javascript"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+<link rel="stylesheet" href="css/index.css">
+<script type="text/javascript">
+
+
+
+
+navigator.geolocation.getCurrentPosition(onSuccess, onError, { timeout: 30000 });
+function onSuccess(position) {
+var lat=position.coords.latitude;
+var lang=position.coords.longitude;
+localStorage.setItem("lat", lat);
+            localStorage.setItem("long", lang);
+var gurl = 'https://www.google.com/maps/search/?api=1&query='+lat+','+lang;
+console.log(gurl);
+//document.getElementById("mytext").value = gurl;
+
+
+
+//Google Maps
+var myLatlng = new google.maps.LatLng(lat,lang);
+var mapOptions = {zoom: 4,center: myLatlng}
+var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+var marker = new google.maps.Marker({position: myLatlng,map: map});
+}
+function onError(error) {
+alert('code: ' + error.code + '\n' +
+'message: ' + error.message + '\n');
+}
+google.maps.event.addDomListener(window, 'load', onSuccess);
+
+
+//////////////////////////CAMERA//////////////////////////////////////////////////
+
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value
+
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+      // Uncomment to view the base64-encoded image data
+       
+
+      // Get image handle
+      //
+      var smallImage = document.getElementById('smallImage');
+      
+
+      // Unhide image elements
+      //
+      smallImage.style.display = 'block';
+
+      // Show the captured photo
+      // The in-line CSS rules are used to resize the image
+      //
+      smallImage.src = "data:image/jpeg;base64," + imageData;
+
+
+//Create a new canvas for our image holder
+
+    var imgCanvas = document.createElement("canvas"),
+    imgContext = imgCanvas.getContext("2d");
+
+    // Make sure canvas is as big as the picture
+    imgCanvas.width = smallImage.width;
+    imgCanvas.height = smallImage.height;
+
+    // Draw image into canvas element
+    imgContext.drawImage(smallImage, 0, 0, smallImage.width, smallImage.height);
+
+    // Get canvas contents as a data URL
+    var imgAsDataURL = imgCanvas.toDataURL("smallImage/png");
+
+    // Save image into localStorage
+    try {
+    // localStorage.setItem(“savedImage”, imgAsDataURL);
+    localStorage.setItem("savedImage", imageData);
+    
+    alert('Image and Location is saved at the localStorage');
+    }
+    catch (e) {
+    alert("Storage failed: " + e);
+    }
+
+    var imageStorage = localStorage.getItem("savedImage");
+    // myCardHolder= document.getElementById(“m1-cardStorage-image1″);
+    // Reuse existing Data URL from localStorage
+    var imageInfo = document.getElementById('smallImage');
+    imageInfo.src = "data:image/jpeg;base64," + imageStorage;
+
+
+    }
+
+
+
+function getData2()
+  {
+                var output = "Your longitude is " +
+                              window.localStorage.getItem("long") +
+                              " and latitude is " +
+                              window.localStorage.getItem("lat");
+                              //window.localStorage.getItem("savedImage");
+                document.getElementById("result").innerHTML = output;
+  }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+      // Uncomment to view the image file URI
+       console.log(imageURI);
+ img_uri = imageURI;
+  //alert(img_uri);
+  window.resolveLocalFileSystemURL(img_uri, function(fileEntry) {
+    console.log(fileEntry.fullPath);    
+      Plugin.callNativeFunction(nativePluginResultHandler, nativePluginErrorHandler, 'success', fileEntry.fullPath);
+  }, onError); 
+      // Get image handle
+      //
+      var largeImage = document.getElementById('largeImage');
+
+      // Unhide image elements
+      //
+      largeImage.style.display = 'block';
+
+      // Show the captured photo
+      // The in-line CSS rules are used to resize the image
+      //
+      largeImage.src = imageURI;   
+}
+
+    // A button will call this function
+    //
+    function capturePhoto() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+        destinationType: destinationType.DATA_URL, saveToPhotoAlbum: true });
+    }
+
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+        destinationType: destinationType.FILE_URI,
+        sourceType: source });      
+    }
+
+    // Called if something bad happens.
+    //
+    function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+
+
+/////////////////////CAMERAEND///////////////////////////////////////////
+
+///////////////SOCIALMEDIA///////////////////////
+
+
+var onSuccess = function(result) {
+  console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+  console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+}
+
+var onError = function(msg) {
+  console.log("Sharing failed with message: " + msg);
+}
+
+window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+
+
+/*
+$(function() { 
+    var map;
+       var latlng = new google.maps.LatLng(49.241943, -122.889318);
+    var myOptions = {
+        zoom: 12,
+        center: latlng,
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById("widget"), myOptions); 
+    
+    $("#btnSave").click(function() { 
+        html2canvas($("#widget"), {
+            useCORS: true,
+//                        allowTaint:true,
+            onrendered: function(canvas) {
+                theCanvas = canvas;
+                document.body.appendChild(canvas);
+
+                // Convert and download as image 
+                Canvas2Image.saveAsPNG(canvas); 
+                
+                $("#img-out").append(canvas);
+                // Clean up 
+                //document.body.removeChild(canvas);
+            }
+        });
+    });
+}); */
+
+////////////////SOCIALMEDIAEND/////////////
+
+
+// Set the object
+</script>
+
+
+
+
+</head>
+<body>
+
+
+<div id="map-canvas"></div>
+
+<!-- <input type="url" id="mytext"> -->
+
+<!-- 
+
+<button onclick="window.plugins.socialsharing.share('Message, image and link', null, smallImage.src, gurl)">message, image and link</button>
+ -->
+<div class="wrap">
+<a href="#" class="button"onclick="capturePhoto();">Make a photo</a> <br>
+<img style="display:none;width:60px;height:60px;" id="smallImage" src="" /> 
+
+<a href="#" class="button2" onclick="window.plugins.socialsharing.shareViaInstagram('Message it via Instagram' ,smallImage.src , function() {console.log('share ok')}, function(errormsg){alert(errormsg)})">Msg via Instagram</a>
+ </div> 
+
+
+<!-- <div id="img"></div> -->
+
+
+<!-- <button onclick="window.plugins.socialsharing.share('Message, image and linkk', null, 'https://www.google.nl/images/srpr/logo4w.png', 'https://www.google.com/maps/search/')">message, image and link</button>
+ -->
+
+ 
+     <!--  <button onclick='getData2()' id='submit'>Submit</button><br>
+        <div id="result"></div> -->
+  <!--  <div class="wrap">
+      <a href="#" class="button">Hover Me!</a>
+      <a href="#" class="button2">Awesome Button</a>
+  </div>      -->
+</body>
+
+</html>
+ 

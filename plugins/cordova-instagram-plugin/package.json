@@ -1,0 +1,57 @@
+{
+  "_from": "git+https://github.com/vstirbu/InstagramPlugin.git",
+  "_id": "cordova-instagram-plugin@0.5.5",
+  "_inBundle": false,
+  "_location": "/cordova-instagram-plugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/vstirbu/InstagramPlugin",
+    "rawSpec": "https://github.com/vstirbu/InstagramPlugin",
+    "saveSpec": "git+https://github.com/vstirbu/InstagramPlugin.git",
+    "fetchSpec": "https://github.com/vstirbu/InstagramPlugin.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/vstirbu/InstagramPlugin.git#f81da4fe5505a5869effc695c138c9ceea236fe8",
+  "_spec": "https://github.com/vstirbu/InstagramPlugin",
+  "_where": "C:\\Users\\Lolita\\Documents\\GMapExample",
+  "author": {
+    "name": "Vlad Stirbu"
+  },
+  "bugs": {
+    "url": "https://github.com/vstirbu/InstagramPlugin/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-instagram-plugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Share the content of a canvas element or a dataUrl encoded image using the Instagram application for iOS and Android.",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "homepage": "https://github.com/vstirbu/InstagramPlugin#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "name": "cordova-instagram-plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vstirbu/InstagramPlugin.git"
+  },
+  "version": "0.5.5"
+}
